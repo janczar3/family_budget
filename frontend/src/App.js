@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
+import UserRegister from './UserRegister';
 
 function App() {
   const [message, setMessage] = useState('');
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+
+  const toggleRegistrationForm = () => {
+    setShowRegistrationForm(!showRegistrationForm);
+  };
 
   useEffect(() => {
     api.get('example/')
@@ -16,7 +22,18 @@ function App() {
 
   return (
     <div className="App">
-      <h1>message: {message}</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="#" onClick={toggleRegistrationForm}>
+              Register
+            </a>
+          </li>
+          {/* Inne linki do menu */}
+        </ul>
+      </nav>
+
+      {showRegistrationForm && <UserRegister/>}
     </div>
   );
 }
