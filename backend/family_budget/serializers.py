@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
+from family_budget.models import Budget
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Serializer for creating a new user."""
@@ -46,3 +48,10 @@ class UserLoginSerializer(serializers.Serializer):
             data["user"] = user
             return data
         raise serializers.ValidationError("Invalid credentials.")
+
+
+class BudgetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Budget
+        fields = ["id", "name", "owner", "users"]
+        read_only_fields = ["owner"]
