@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { registerUser } from './services/api';
+import { registerUser } from "../../services/user";
 
-const Register = () => {
+const UserRegister = ({ onRegistrationSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -15,8 +15,12 @@ const Register = () => {
     try {
       await registerUser(username, password, passwordConfirm);
       setMessage('Registration successful!');
+      setUsername('');
+      setPassword('');
+      setPasswordConfirm('');
       setError('');
       setErrors('');
+      onRegistrationSuccess();
     } catch (err) {
       setErrors(err.response.data);
       setError('Registration failed. Please try again.');
@@ -75,4 +79,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default UserRegister;
