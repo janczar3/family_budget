@@ -1,0 +1,42 @@
+version: "3.12"
+
+services:
+  backend:
+    build: ./backend
+    container_name: family-budget-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend/:/srv/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.dev
+  frontend:
+    build: ./frontend
+    container_name: family-budget-frontend
+    command: npm start
+    ports:
+      - 3001:3000
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./frontend/:/srv/app
+      - node_modules:/srv/app/node_modules
+    depends_on:
+      - backend
+  nginx:
+    build: ./nginx
+    container_name: family-budget-nginx
+    ports:
+      - 8080:80
+    restart: always
+    volumes:
+      - static:/srv/app/static
+      - media:/srv/app/media
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  node_modules:
+  media:
+  static:
