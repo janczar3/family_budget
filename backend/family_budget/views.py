@@ -2,7 +2,6 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.db.models import Q
@@ -11,8 +10,13 @@ from family_budget.serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
 )
-from family_budget.models import Budget
-from family_budget.serializers import BudgetSerializer
+from family_budget.models import Budget, Income, Expense
+from family_budget.serializers import (
+    BudgetSerializer,
+    IncomeSerializer,
+    ExpenseSerializer,
+)
+from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrMemberOfBudget
 
 
 class UserViewSet(viewsets.ViewSet):
@@ -65,7 +69,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
     """Budget viewset."""
 
     serializer_class = BudgetSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
         """Return budgets if current user is owner or member.'"""
@@ -76,19 +80,16 @@ class BudgetViewSet(viewsets.ModelViewSet):
         """Set current user as owner of created budget."""
         serializer.save(owner=self.request.user)
 
-    def perform_update(self, serializer):
-        """Check if current user is owner of updated budget."""
-        budget = self.get_object()
-        if budget.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to edit this budget."
-            )
-        serializer.save()
 
-    def perform_destroy(self, instance):
-        """Check if current user is owner of deleted budget."""
-        if instance.owner != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to delete this budget."
-            )
-        instance.delete()
+class IncomeViewSet(viewsets.ModelViewSet):
+    """Income viewset."""
+
+    serializer_class = IncomeSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrMemberOfBudget]
+
+
+class ExpenseViewSet(viewsets.ModelViewSet):
+    """Expense viewset."""
+
+    serializer_class = ExpenseSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrMemberOfBudget]

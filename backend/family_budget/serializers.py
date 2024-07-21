@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
-from family_budget.models import Budget
+from family_budget.models import Budget, Income, Expense
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -50,8 +50,37 @@ class UserLoginSerializer(serializers.Serializer):
         raise serializers.ValidationError("Invalid credentials.")
 
 
+class IncomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Income
+        fields = ["id", "name", "budget", "value", "category"]
+
+
+class ExpenseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Expense
+        fields = ["id", "name", "budget", "value", "category"]
+
+
 class BudgetSerializer(serializers.ModelSerializer):
+    incomes = IncomeSerializer(many=True, read_only=True)
+    expenses = ExpenseSerializer(many=True, read_only=True)
+    total = serializers.SerializerMethodField()
+
     class Meta:
         model = Budget
-        fields = ["id", "name", "owner", "users"]
-        read_only_fields = ["owner"]
+        fields = [
+            "id",
+            "name",
+            "owner",
+            "users",
+            "incomes",
+            "expenses",
+            "total",
+        ]
+        read_only_fields = ["owner", "incomes", "expenses", "total"]
+
+    def get_total(self, obj):
+        incomes_sum = sum(obj.incomes.values_list("value", flat=True))
+        expenses_sum = sum(obj.expenses.values_list("value", flat=True))
+        return incomes_sum - expenses_sum
