@@ -21,6 +21,7 @@ from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrUserInBudget
 
 
 class UserDetailView(APIView):
+    """View to get user's details'"""
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -54,18 +55,18 @@ class UserAuthViewSet(viewsets.ViewSet):
             refresh = RefreshToken.for_user(user)
             return Response(
                 {
-                    "refresh_token": str(refresh),
-                    "access_token": str(refresh.access_token),
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
                 }
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
-        detail=False, methods=["post"], permission_classes=[IsAuthenticated]
+        detail=False, methods=["post"],
     )
     def logout(self, request):
         """Logout a user."""
-        refresh_token = request.data["refresh_token"]
+        refresh_token = request.data["refresh"]
         token = RefreshToken(refresh_token)
         token.blacklist()
         return Response(
@@ -75,7 +76,7 @@ class UserAuthViewSet(viewsets.ViewSet):
 
 
 class BudgetViewSet(viewsets.ModelViewSet):
-    """Budget viewset."""
+    """Budget viewset to manage budgets."""
 
     serializer_class = BudgetSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
@@ -91,14 +92,14 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
 
 class IncomeViewSet(viewsets.ModelViewSet):
-    """Income viewset."""
+    """Income viewset to add, edit and remove incomes."""
 
     serializer_class = IncomeSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrUserInBudget]
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
-    """Expense viewset."""
+    """Expense viewset to add, edit and remove expenses."""
 
     serializer_class = ExpenseSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrUserInBudget]

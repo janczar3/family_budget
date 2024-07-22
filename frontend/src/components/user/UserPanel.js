@@ -1,8 +1,8 @@
 import UserRegisterForm from './forms/UserRegisterForm';
 import UserLoginForm from "./forms/UserLoginForm";
-import { logoutUser } from "../../services/user";
+import { logoutUser } from "../../services/auth";
 import React, { useEffect, useState } from 'react';
-import { checkIfLoggedIn} from "../../services/user";
+import { checkIfLoggedIn} from "../../services/auth";
 
 function UserPanel () {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -34,8 +34,7 @@ function UserPanel () {
   const logout = async () => {
     try {
       await logoutUser();
-      setShowLoginForm(true);
-      setShowRegistrationForm(true);
+      setIsLoggedIn(false);
     } catch (err) {
       setError('Logout failed!');
     }

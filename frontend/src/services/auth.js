@@ -1,7 +1,7 @@
 import apiClient from "./base";
 
-const ACCESS_TOKEN_KEY = 'access_token';
-const REFRESH_TOKEN_KEY = 'refresh_token';
+const ACCESS_TOKEN_KEY = 'access';
+const REFRESH_TOKEN_KEY = 'refresh';
 
 export const registerUser = async (username, password, passwordConfirm) => {
   return await apiClient.post('/family-budget/users/register/', {
@@ -16,8 +16,8 @@ export const loginUser = async (username, password) => {
     username,
     password,
   });
-  localStorage.setItem(ACCESS_TOKEN_KEY, response.data.access);
-  localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refresh);
+  localStorage.setItem(ACCESS_TOKEN_KEY, response.data[ACCESS_TOKEN_KEY]);
+  localStorage.setItem(REFRESH_TOKEN_KEY, response.data[REFRESH_TOKEN_KEY]);
   return response.data;
 };
 
@@ -27,7 +27,7 @@ export const logoutUser = async () => {
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
   const response = await apiClient.post('/family-budget/users/logout/', {
-    refresh_token: refreshToken,
+    refresh: refreshToken,
   });
   return response.data;
 };
@@ -52,7 +52,7 @@ export const checkIfLoggedIn = async () => {
         const refreshResponse = await apiClient.post('/family-budget/token/refresh/', {
           refresh: refreshToken,
         });
-        localStorage.setItem(ACCESS_TOKEN_KEY, refreshResponse.data.access);
+        localStorage.setItem(ACCESS_TOKEN_KEY, refreshResponse.data[ACCESS_TOKEN_KEY]);
         return checkIfLoggedIn();
       } catch (refreshError) {
         console.error('Error refreshing token', refreshError);

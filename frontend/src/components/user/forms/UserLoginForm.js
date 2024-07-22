@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { loginUser} from "../../../services/user";
+import { loginUser} from "../../../services/auth";
 
 const UserLoginForm = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
