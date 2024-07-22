@@ -241,10 +241,10 @@ class TestBudgetViewSet(TestBudgetBase):
         response = authenticated_client_owner.get(url_list, format="json")
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {
-            'count': 1,
-            'next': None,
-            'previous': None,
-            'results': [
+            "count": 1,
+            "next": None,
+            "previous": None,
+            "results": [
                 {
                     "id": budget.pk,
                     "name": budget.name,
@@ -254,7 +254,7 @@ class TestBudgetViewSet(TestBudgetBase):
                     "incomes": [],
                     "total": 0,
                 }
-            ]
+            ],
         }
 
     def test_list_budgets_user_member(
@@ -269,10 +269,10 @@ class TestBudgetViewSet(TestBudgetBase):
         response = authenticated_client_member.get(url_list, format="json")
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {
-            'count': 1,
-            'next': None,
-            'previous': None,
-            'results':  [
+            "count": 1,
+            "next": None,
+            "previous": None,
+            "results": [
                 {
                     "id": budget.pk,
                     "name": budget.name,
@@ -282,7 +282,7 @@ class TestBudgetViewSet(TestBudgetBase):
                     "incomes": [],
                     "total": 0,
                 }
-            ]
+            ],
         }
 
     def test_list_budgets_anonymous(
@@ -305,10 +305,10 @@ class TestBudgetViewSet(TestBudgetBase):
         response = authenticated_client_not_member.get(url_list, format="json")
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {
-            'count': 0,
-            'next': None,
-            'previous': None,
-            'results': [],
+            "count": 0,
+            "next": None,
+            "previous": None,
+            "results": [],
         }
 
     def test_destroy_budget_user_owner(

@@ -18,7 +18,7 @@ class IsOwnerOrUserInBudget(permissions.BasePermission):
     """Custom permission to only allow owners and related users to add/edit incomes/expense of their budgets."""
 
     def has_permission(self, request, view):
-        budget_id = request.data.get('budget')
+        budget_id = request.data.get("budget")
         if not budget_id:
             return False
 

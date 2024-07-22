@@ -20,9 +20,9 @@ from family_budget.pagination import BudgetPagination
 from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrUserInBudget
 
 
-
 class UserDetailView(APIView):
     """View to get user's details'"""
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -63,7 +63,8 @@ class UserAuthViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
-        detail=False, methods=["post"],
+        detail=False,
+        methods=["post"],
     )
     def logout(self, request):
         """Logout a user."""

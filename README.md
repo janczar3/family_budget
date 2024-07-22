@@ -1,3 +1,7 @@
+## Build app:
+
+### `docker-compose build`
+
 ## Running app:
 
 Create .env.dev with content from file .env-example
