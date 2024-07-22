@@ -13,9 +13,9 @@ function BudgetPanel() {
     fetchBudgets(currentPage);
   }, [currentPage]);
 
-  const fetchBudgets = async () => {
+  const fetchBudgets = async (page = currentPage) => {
     try {
-      const response = await listBudgets(currentPage);
+      const response = await listBudgets(page);
       setBudgets(response.data.results);
       setNextPage(response.data.next);
       setPreviousPage(response.data.previous);
@@ -27,7 +27,11 @@ function BudgetPanel() {
   const handleDeleteBudget = async (id) => {
     try {
       await deleteBudget(id);
-      await fetchBudgets();
+      if (budgets.length === 1 && previousPage) {
+        await fetchBudgets(previousPage);
+      } else {
+        await fetchBudgets();
+      }
     } catch (err) {
       setError(err);
     }
