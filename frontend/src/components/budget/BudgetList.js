@@ -1,14 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
+import TransactionList from "../transaction/TransactionList";
 
 function BudgetList({budgets, nextPage, previousPage, setCurrentPage, handleDeleteBudget}) {
+  const [budgetsShowDetails, setBudgetsShowDetails] = useState([]);
+
+  const toggleBudgetDetails = (id) => {
+    if (budgetsShowDetails.includes(id)) {
+      setBudgetsShowDetails(budgetsShowDetails.filter(budgetId => budgetId !== id));
+    } else {
+      setBudgetsShowDetails([...budgetsShowDetails, id]);
+    }
+  };
+
   return (
     <div>
       <h2>Budget List</h2>
       <ul>
         {budgets.map((budget) => (
           <li key={budget.id}>
-            <span>{budget.name} </span>
-            <a href="#" onClick={() => handleDeleteBudget(budget.id)}>Delete</a>
+            <a href="#" onClick={() => toggleBudgetDetails(budget.id)}>{budget.name} </a>
+            <button onClick={() => handleDeleteBudget(budget.id)}>delete</button>
+            {budgetsShowDetails.includes(budget.id) && (
+              <>
+                <TransactionList transactions={budget.incomes} type="incomes"/>
+                <TransactionList transactions={budget.expenses} type="expenses"/>
+              </>
+            )}
           </li>
         ))}
       </ul>
