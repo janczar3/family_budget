@@ -16,6 +16,7 @@ from family_budget.serializers import (
     UserLoginSerializer,
     UserDetailsSerializer,
 )
+from family_budget.pagination import BudgetPagination
 from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrUserInBudget
 
 
@@ -80,6 +81,7 @@ class BudgetViewSet(viewsets.ModelViewSet):
 
     serializer_class = BudgetSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    pagination_class = BudgetPagination
 
     def get_queryset(self):
         """Return budgets if current user is owner or member.'"""
