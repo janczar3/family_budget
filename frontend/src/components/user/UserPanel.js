@@ -1,8 +1,7 @@
 import UserRegisterForm from './forms/UserRegisterForm';
 import UserLoginForm from "./forms/UserLoginForm";
-import { logoutUser } from "../../services/auth";
+import { getLoggedInUser, logoutUser } from "../../services/auth";
 import React, { useEffect, useState } from 'react';
-import { checkIfLoggedIn} from "../../services/auth";
 
 function UserPanel () {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -42,7 +41,7 @@ function UserPanel () {
 
   useEffect(() => {
     const verifyUser = async () => {
-      const userData = await checkIfLoggedIn();
+      const userData = await getLoggedInUser();
       if (userData) {
         setIsLoggedIn(true);
         setUser(userData);

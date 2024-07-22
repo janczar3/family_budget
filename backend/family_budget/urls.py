@@ -14,7 +14,7 @@ from family_budget.views import (
 )
 
 router = DefaultRouter()
-router.register(r"users", UserAuthViewSet, basename="user")
+router.register(r"auth", UserAuthViewSet, basename="auth")
 router.register(r"budgets", BudgetViewSet, basename="budget")
 router.register(r"incomes", IncomeViewSet, basename="income")
 router.register(r"expenses", ExpenseViewSet, basename="expense")

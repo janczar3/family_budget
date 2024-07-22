@@ -1,10 +1,11 @@
 import apiClient from "./base";
 
+const BASE_AUTH_URL = '/family-budget/auth';
 const ACCESS_TOKEN_KEY = 'access';
 const REFRESH_TOKEN_KEY = 'refresh';
 
 export const registerUser = async (username, password, passwordConfirm) => {
-  return await apiClient.post('/family-budget/users/register/', {
+  return await apiClient.post(`${BASE_AUTH_URL}/register/`, {
     username,
     password,
     password_confirm: passwordConfirm,
@@ -12,7 +13,7 @@ export const registerUser = async (username, password, passwordConfirm) => {
 };
 
 export const loginUser = async (username, password) => {
-  const response = await apiClient.post('/family-budget/users/login/', {
+  const response = await apiClient.post(`${BASE_AUTH_URL}/login/`, {
     username,
     password,
   });
@@ -26,13 +27,13 @@ export const logoutUser = async () => {
   if (!refreshToken) throw new Error('No refresh token available');
   localStorage.removeItem(ACCESS_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
-  const response = await apiClient.post('/family-budget/users/logout/', {
+  const response = await apiClient.post(`${BASE_AUTH_URL}/logout/`, {
     refresh: refreshToken,
   });
   return response.data;
 };
 
-export const checkIfLoggedIn = async () => {
+export const getLoggedInUser = async () => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
   const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
   if (!accessToken || !refreshToken) {
@@ -53,7 +54,7 @@ export const checkIfLoggedIn = async () => {
           refresh: refreshToken,
         });
         localStorage.setItem(ACCESS_TOKEN_KEY, refreshResponse.data[ACCESS_TOKEN_KEY]);
-        return checkIfLoggedIn();
+        return getLoggedInUser();
       } catch (refreshError) {
         console.error('Error refreshing token', refreshError);
         localStorage.removeItem(ACCESS_TOKEN_KEY);
