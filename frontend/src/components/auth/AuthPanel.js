@@ -3,10 +3,9 @@ import UserLoginForm from "./forms/UserLoginForm";
 import { getLoggedInUser, logoutUser } from "../../services/auth";
 import React, { useEffect, useState } from 'react';
 
-function UserPanel () {
+function AuthPanel ({ isLoggedIn, setIsLoggedIn }) {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
 
@@ -75,7 +74,6 @@ function UserPanel () {
                   Logout
                 </a>
               </li>
-              <p>TODO Budget data here</p>
             </>
           )}
         </ul>
@@ -87,4 +85,4 @@ function UserPanel () {
   )
 }
 
-export default UserPanel;
+export default AuthPanel;

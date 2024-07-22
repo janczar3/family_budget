@@ -1,10 +1,11 @@
-import React from 'react';
-import UserPanel from "./components/user/UserPanel";
+import React, {useState} from 'react';
+import AuthPanel from "./components/auth/AuthPanel";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div className="App">
-      <UserPanel/>
+      <AuthPanel isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
     </div>
   );
 }
