@@ -16,7 +16,7 @@ from family_budget.serializers import (
     UserLoginSerializer,
     UserDetailsSerializer,
 )
-from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrMemberOfBudget
+from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrUserInBudget
 
 
 
@@ -94,11 +94,11 @@ class IncomeViewSet(viewsets.ModelViewSet):
     """Income viewset."""
 
     serializer_class = IncomeSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrMemberOfBudget]
+    permission_classes = [IsAuthenticated, IsOwnerOrUserInBudget]
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
     """Expense viewset."""
 
     serializer_class = ExpenseSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrMemberOfBudget]
+    permission_classes = [IsAuthenticated, IsOwnerOrUserInBudget]

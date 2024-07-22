@@ -14,15 +14,19 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return False
 
 
-class IsOwnerOrMemberOfBudget(permissions.BasePermission):
-    """Custom permission to only allow owners and members to edit or delete their incomes/expenses."""
+class IsOwnerOrUserInBudget(permissions.BasePermission):
+    """Custom permission to only allow owners and related users to add/edit incomes/expense of their budgets."""
 
-    def has_object_permission(self, request, view, obj):
-        budget_id = request.data.get("budget")
-        if budget_id:
+    def has_permission(self, request, view):
+        budget_id = request.data.get('budget')
+        if not budget_id:
+            return False
+
+        try:
             budget = Budget.objects.get(pk=budget_id)
-            return (
-                budget.owner == request.user
-                or request.user in budget.users.all()
-            )
+        except Budget.DoesNotExist:
+            return False
+
+        if budget.owner == request.user or request.user in budget.users.all():
+            return True
         return False
