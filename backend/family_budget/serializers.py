@@ -84,3 +84,20 @@ class BudgetSerializer(serializers.ModelSerializer):
         incomes_sum = sum(obj.incomes.values_list("value", flat=True))
         expenses_sum = sum(obj.expenses.values_list("value", flat=True))
         return incomes_sum - expenses_sum
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    own_budgets = serializers.SerializerMethodField()
+    shared_budgets = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "own_budgets", "shared_budgets"]
+
+    def get_own_budgets(self, obj):
+        own_budgets = Budget.objects.filter(owner=obj)
+        return BudgetSerializer(own_budgets, many=True).data
+
+    def get_shared_budgets(self, obj):
+        shared_budgets = Budget.objects.filter(users=obj)
+        return BudgetSerializer(shared_budgets, many=True).data

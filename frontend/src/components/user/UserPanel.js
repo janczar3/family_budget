@@ -1,13 +1,15 @@
-import UserRegister from './UserRegister';
-import UserLogin from "./UserLogin";
-import {logoutUser} from "../../services/user";
-import React, {useState} from "react";
+import UserRegisterForm from './forms/UserRegisterForm';
+import UserLoginForm from "./forms/UserLoginForm";
+import { logoutUser } from "../../services/user";
+import React, { useEffect, useState } from 'react';
+import { checkIfLoggedIn} from "../../services/user";
 
 function UserPanel () {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
 
   const toggleRegistrationForm = () => {
     setShowRegistrationForm(!showRegistrationForm);
@@ -38,6 +40,17 @@ function UserPanel () {
       setError('Logout failed!');
     }
   };
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const userData = await checkIfLoggedIn();
+      if (userData) {
+        setIsLoggedIn(true);
+        setUser(userData);
+      }
+    };
+    verifyUser();
+  }, []);
 
   return (
     <div className="UserPanel">
@@ -70,8 +83,8 @@ function UserPanel () {
         </ul>
       </nav>
       {error && <p style={{color: 'red'}}>{error}</p>}
-      {showRegistrationForm && <UserRegister onRegistrationSuccess={onRegistrationSuccess}/>}
-      {showLoginForm && <UserLogin onLoginSuccess={onLoginSuccess}/>}
+      {showRegistrationForm && <UserRegisterForm onRegistrationSuccess={onRegistrationSuccess}/>}
+      {showLoginForm && <UserLoginForm onLoginSuccess={onLoginSuccess}/>}
     </div>
   )
 }

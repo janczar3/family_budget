@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { loginUser} from "../../services/user";
+import { loginUser} from "../../../services/user";
 
-const UserLogin = ({ onLoginSuccess }) => {
+const UserLoginForm = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -55,4 +55,4 @@ const UserLogin = ({ onLoginSuccess }) => {
   );
 };
 
-export default UserLogin;
+export default UserLoginForm;

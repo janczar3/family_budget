@@ -1,12 +1,9 @@
 ## Running app:
 
+Create .env.dev with content from file .env-example
 In the project directory, you can run:
 
 ### `docker-compose up`
-
-## Display Django admin panel
-
-Open [http://localhost:8000](http://localhost:8000) to view it in your browser.
 
 ## Display React app
 

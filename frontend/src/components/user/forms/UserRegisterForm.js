@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { registerUser } from "../../services/user";
+import { registerUser } from "../../../services/user";
 
-const UserRegister = ({ onRegistrationSuccess }) => {
+const UserRegisterForm = ({ onRegistrationSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -79,4 +79,4 @@ const UserRegister = ({ onRegistrationSuccess }) => {
   );
 };
 
-export default UserRegister;
+export default UserRegisterForm;

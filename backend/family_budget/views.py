@@ -3,23 +3,32 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 
 from django.db.models import Q
 
-from family_budget.serializers import (
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-)
 from family_budget.models import Budget, Income, Expense
 from family_budget.serializers import (
     BudgetSerializer,
     IncomeSerializer,
     ExpenseSerializer,
+    UserRegistrationSerializer,
+    UserLoginSerializer,
+    UserDetailsSerializer,
 )
 from family_budget.permissions import IsOwnerOrReadOnly, IsOwnerOrMemberOfBudget
 
 
-class UserViewSet(viewsets.ViewSet):
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserDetailsSerializer(request.user)
+        return Response(serializer.data)
+
+
+class UserAuthViewSet(viewsets.ViewSet):
     """ViewSet for register, login and logout users."""
 
     permission_classes = [AllowAny]

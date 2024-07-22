@@ -68,7 +68,7 @@ class TestBudgetBase:
 
 
 @pytest.mark.django_db
-class TestUserViewSet:
+class TestUserAuthViewSet:
     """Test UserViewSet and depended serializer."""
 
     @pytest.fixture
@@ -440,6 +440,8 @@ class TestIncomeViewSet(TestBudgetBase):
                 "category": IncomeCategory.SALARY.value,
             }
 
+    # todo tests
+
 
 @pytest.mark.django_db
 class TestExpenseViewSet(TestBudgetBase):
@@ -495,3 +497,5 @@ class TestExpenseViewSet(TestBudgetBase):
                 "value": str(data["value"]),
                 "category": ExpenseCategory.GROCERIES.value,
             }
+
+    # todo tests
