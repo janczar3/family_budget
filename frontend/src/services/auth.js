@@ -1,8 +1,7 @@
 import apiClient from "./base";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../consts";
 
 const BASE_AUTH_URL = '/family-budget/auth';
-const ACCESS_TOKEN_KEY = 'access';
-const REFRESH_TOKEN_KEY = 'refresh';
 
 export const registerUser = async (username, password, passwordConfirm) => {
   return await apiClient.post(`${BASE_AUTH_URL}/register/`, {
