@@ -46,6 +46,7 @@ function BudgetPanel() {
         previousPage={previousPage}
         setCurrentPage={setCurrentPage}
         handleDeleteBudget={handleDeleteBudget}
+        fetchBudgets={fetchBudgets}
       />
       <BudgetForm fetchBudgets={fetchBudgets}/>
     </div>

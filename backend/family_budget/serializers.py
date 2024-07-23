@@ -65,7 +65,12 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class BudgetSerializer(serializers.ModelSerializer):
     incomes = IncomeSerializer(many=True, read_only=True)
     expenses = ExpenseSerializer(many=True, read_only=True)
-    users = serializers.ListField(child=serializers.CharField(), write_only=True)
+    users = serializers.ListField(
+        child=serializers.CharField(),
+        write_only=True,
+        required=False,
+        allow_empty=True,
+    )
     user_names = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()
 
@@ -81,7 +86,13 @@ class BudgetSerializer(serializers.ModelSerializer):
             "expenses",
             "total",
         ]
-        read_only_fields = ["owner", "incomes", "expenses", "total", "user_names"]
+        read_only_fields = [
+            "owner",
+            "incomes",
+            "expenses",
+            "total",
+            "user_names",
+        ]
 
     def get_total(self, obj):
         incomes_sum = sum(obj.incomes.values_list("value", flat=True))
@@ -94,17 +105,24 @@ class BudgetSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Convert user names to their ids."""
-        user_names = validated_data.pop('users')
-        user_ids = User.objects.filter(username__in=user_names).values_list('id', flat=True)
+        user_ids = None
+        if "users" in validated_data:
+            user_names = validated_data.pop("users")
+            user_ids = User.objects.filter(username__in=user_names).values_list(
+                "id", flat=True
+            )
         budget = Budget.objects.create(**validated_data)
-        budget.users.set(user_ids)
+        if user_ids:
+            budget.users.set(user_ids)
         return budget
 
     def update(self, instance, validated_data):
         """Convert user names to their ids."""
-        if 'users' in validated_data:
-            user_names = validated_data.pop('users')
-            user_ids = User.objects.filter(username__in=user_names).values_list('id', flat=True)
+        if "users" in validated_data:
+            user_names = validated_data.pop("users")
+            user_ids = User.objects.filter(username__in=user_names).values_list(
+                "id", flat=True
+            )
             instance.users.set(user_ids)
         return super().update(instance, validated_data)
 

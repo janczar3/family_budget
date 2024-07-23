@@ -1,16 +1,7 @@
-import React, {useState} from 'react';
-import TransactionList from "../transaction/TransactionList";
+import React from 'react';
+import BudgetListItem from "./BudgetListItem";
 
-function BudgetList({budgets, nextPage, previousPage, setCurrentPage, handleDeleteBudget}) {
-  const [budgetsShowDetails, setBudgetsShowDetails] = useState([]);
-
-  const toggleBudgetDetails = (id) => {
-    if (budgetsShowDetails.includes(id)) {
-      setBudgetsShowDetails(budgetsShowDetails.filter(budgetId => budgetId !== id));
-    } else {
-      setBudgetsShowDetails([...budgetsShowDetails, id]);
-    }
-  };
+function BudgetList({budgets, nextPage, previousPage, setCurrentPage, handleDeleteBudget, fetchBudgets}) {
 
   return (
     <div>
@@ -18,22 +9,7 @@ function BudgetList({budgets, nextPage, previousPage, setCurrentPage, handleDele
       <ul>
         {budgets.map((budget) => (
           <li key={budget.id}>
-            <a href="#" onClick={() => toggleBudgetDetails(budget.id)}>{budget.name} </a>
-            <button onClick={() => handleDeleteBudget(budget.id)}>delete</button>
-            {budgetsShowDetails.includes(budget.id) && (
-              <>
-                <div>
-                  <p>Budget members:</p>
-                  <ul>
-                    {budget.user_names.map((username) => (
-                    <li key={username}>{username}</li>
-                    ))}
-                  </ul>
-                </div>
-                <TransactionList transactions={budget.incomes} type="incomes"/>
-                <TransactionList transactions={budget.expenses} type="expenses"/>
-              </>
-            )}
+            <BudgetListItem budget={budget} handleDeleteBudget={handleDeleteBudget} fetchBudgets={fetchBudgets}/>
           </li>
         ))}
       </ul>

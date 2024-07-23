@@ -15,8 +15,10 @@ function BudgetForm({fetchBudgets, edit=false}) {
     try {
       const data = {
         name: name,
-        users: users.split(','),
       };
+      if (users) {
+        data.users = users.split(',');
+      }
       await createBudget(data);
       setName('');
       setUsers('');
@@ -50,7 +52,6 @@ function BudgetForm({fetchBudgets, edit=false}) {
             id="users"
             value={users}
             onChange={(e) => setUsers(e.target.value)}
-            required
           />
           <label htmlFor="name">Share budget with users (ex. "john123,bob242")</label>
         </div>

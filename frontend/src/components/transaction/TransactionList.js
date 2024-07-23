@@ -1,8 +1,9 @@
 import React from "react";
+import TransactionForm from "../transaction/TransactionForm";
 
-function TransactionList({transactions, type}) {
+function TransactionList({budget, fetchBudgets, transactions, type}) {
   return (
-    <div>
+    <div style={{width: 300, border: "1px solid black", margin: 10}}>
       {transactions.length ? (
         <>
           <div>
@@ -18,7 +19,8 @@ function TransactionList({transactions, type}) {
             </ul>
           </div>
         </>
-      ) : <p>no {type}</p>}
+      ) : <p>no {type}s</p>}
+      <TransactionForm budget={budget} fetchBudgets={fetchBudgets} type={type}/>
     </div>
   );
 }

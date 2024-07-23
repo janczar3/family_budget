@@ -107,10 +107,7 @@ class TestBudgetViewSet(TestBudgetBase):
         url_list: str,
     ):
         """Test create budget."""
-        data = {
-            "name": "budget_1",
-            "users": [user_member.username]
-        }
+        data = {"name": "budget_1", "users": [user_member.username]}
         response = authenticated_client_owner.post(
             url_list, data, format="json"
         )
@@ -205,7 +202,7 @@ class TestBudgetViewSet(TestBudgetBase):
             "id": budget.pk,
             "name": budget.name,
             "owner": user_owner.pk,
-            'user_names': [user_member.username],
+            "user_names": [user_member.username],
             "expenses": [],
             "incomes": [],
             "total": 0,
@@ -244,7 +241,17 @@ class TestBudgetViewSet(TestBudgetBase):
             "count": 1,
             "next": None,
             "previous": None,
-            'results': [{'id': budget.pk, 'name': budget.name, 'owner': user_owner.pk, 'user_names': [user_member.username], 'incomes': [], 'expenses': [], 'total': 0}]
+            "results": [
+                {
+                    "id": budget.pk,
+                    "name": budget.name,
+                    "owner": user_owner.pk,
+                    "user_names": [user_member.username],
+                    "incomes": [],
+                    "expenses": [],
+                    "total": 0,
+                }
+            ],
         }
 
     def test_list_budgets_user_member(
@@ -262,7 +269,17 @@ class TestBudgetViewSet(TestBudgetBase):
             "count": 1,
             "next": None,
             "previous": None,
-            'results': [{'id': budget.pk, 'name': budget.name, 'owner': user_owner.pk, 'user_names': [user_member.username], 'incomes': [], 'expenses': [], 'total': 0}]
+            "results": [
+                {
+                    "id": budget.pk,
+                    "name": budget.name,
+                    "owner": user_owner.pk,
+                    "user_names": [user_member.username],
+                    "incomes": [],
+                    "expenses": [],
+                    "total": 0,
+                }
+            ],
         }
 
     def test_list_budgets_anonymous(
