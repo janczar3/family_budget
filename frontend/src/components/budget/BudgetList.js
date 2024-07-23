@@ -22,6 +22,14 @@ function BudgetList({budgets, nextPage, previousPage, setCurrentPage, handleDele
             <button onClick={() => handleDeleteBudget(budget.id)}>delete</button>
             {budgetsShowDetails.includes(budget.id) && (
               <>
+                <div>
+                  <p>Budget members:</p>
+                  <ul>
+                    {budget.user_names.map((username) => (
+                    <li key={username}>{username}</li>
+                    ))}
+                  </ul>
+                </div>
                 <TransactionList transactions={budget.incomes} type="incomes"/>
                 <TransactionList transactions={budget.expenses} type="expenses"/>
               </>

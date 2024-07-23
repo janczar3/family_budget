@@ -5,12 +5,11 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 
-RUN apt-get update && apt-get install -y \
-  gcc \
-  netcat \
-  libpq-dev \
-  postgresql-client \
-  && apt-get clean
+#RUN apt-get update && apt-get install -y \
+#  gcc \
+#  netcat \
+#  libpq-dev \
+#  && apt-get clean
 
 RUN pip install -r requirements.txt
 

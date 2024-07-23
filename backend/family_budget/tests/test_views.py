@@ -26,15 +26,15 @@ class TestUserAuthViewSet:
 
     @pytest.fixture
     def register_url(self) -> str:
-        return reverse("user-register")
+        return reverse("auth-register")
 
     @pytest.fixture
     def login_url(self) -> str:
-        return reverse("user-login")
+        return reverse("auth-login")
 
     @pytest.fixture
     def logout_url(self) -> str:
-        return reverse("user-logout")
+        return reverse("auth-logout")
 
     def test_user_registration_success(
         self, client: APIClient, register_url: str
@@ -103,11 +103,13 @@ class TestBudgetViewSet(TestBudgetBase):
         self,
         authenticated_client_owner: APIClient,
         user_owner: User,
+        user_member: User,
         url_list: str,
     ):
         """Test create budget."""
         data = {
             "name": "budget_1",
+            "users": [user_member.username]
         }
         response = authenticated_client_owner.post(
             url_list, data, format="json"
@@ -115,6 +117,7 @@ class TestBudgetViewSet(TestBudgetBase):
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data["name"] == data["name"]
         assert response.data["owner"] == user_owner.pk
+        assert response.data["user_names"] == [user_member.username]
         assert Budget.objects.filter(name=data["name"]).exists()
 
     def test_create_budget_anonymous(
@@ -132,7 +135,6 @@ class TestBudgetViewSet(TestBudgetBase):
         self,
         authenticated_client_owner: APIClient,
         user_owner: User,
-        budget: Budget,
         url_detail: str,
     ):
         """Test update budget."""
@@ -146,7 +148,7 @@ class TestBudgetViewSet(TestBudgetBase):
         assert Budget.objects.filter(name=data["name"]).exists()
 
     def test_update_budget_anonymous(
-        self, anonymous_client: APIClient, budget: Budget, url_detail: str
+        self, anonymous_client: APIClient, url_detail: str
     ):
         """Test update budget anonymous should fail."""
         data = {"name": "new_budget_name"}
@@ -157,7 +159,6 @@ class TestBudgetViewSet(TestBudgetBase):
     def test_update_budget_user_is_not_owner(
         self,
         authenticated_client_member: APIClient,
-        budget: Budget,
         url_detail: str,
     ):
         """Test update budget by member only should fail."""
@@ -183,7 +184,7 @@ class TestBudgetViewSet(TestBudgetBase):
             "id": budget.pk,
             "name": budget.name,
             "owner": user_owner.pk,
-            "users": [user_member.pk],
+            "user_names": [user_member.username],
             "expenses": [],
             "incomes": [],
             "total": 0,
@@ -204,14 +205,14 @@ class TestBudgetViewSet(TestBudgetBase):
             "id": budget.pk,
             "name": budget.name,
             "owner": user_owner.pk,
-            "users": [user_member.pk],
+            'user_names': [user_member.username],
             "expenses": [],
             "incomes": [],
             "total": 0,
         }
 
     def test_retrieve_budget_anonymous(
-        self, anonymous_client: APIClient, budget: Budget, url_detail: str
+        self, anonymous_client: APIClient, url_detail: str
     ):
         """Test retrieve budget anonymous should fail."""
         response = anonymous_client.get(url_detail, format="json")
@@ -220,7 +221,6 @@ class TestBudgetViewSet(TestBudgetBase):
     def test_retrieve_budget_not_member_user(
         self,
         authenticated_client_not_member: APIClient,
-        budget: Budget,
         url_detail,
     ):
         """Test retrieve budget by user is not member and not owner should fail."""
@@ -244,17 +244,7 @@ class TestBudgetViewSet(TestBudgetBase):
             "count": 1,
             "next": None,
             "previous": None,
-            "results": [
-                {
-                    "id": budget.pk,
-                    "name": budget.name,
-                    "owner": user_owner.pk,
-                    "users": [user_member.pk],
-                    "expenses": [],
-                    "incomes": [],
-                    "total": 0,
-                }
-            ],
+            'results': [{'id': budget.pk, 'name': budget.name, 'owner': user_owner.pk, 'user_names': [user_member.username], 'incomes': [], 'expenses': [], 'total': 0}]
         }
 
     def test_list_budgets_user_member(
@@ -272,23 +262,12 @@ class TestBudgetViewSet(TestBudgetBase):
             "count": 1,
             "next": None,
             "previous": None,
-            "results": [
-                {
-                    "id": budget.pk,
-                    "name": budget.name,
-                    "owner": user_owner.pk,
-                    "users": [user_member.pk],
-                    "expenses": [],
-                    "incomes": [],
-                    "total": 0,
-                }
-            ],
+            'results': [{'id': budget.pk, 'name': budget.name, 'owner': user_owner.pk, 'user_names': [user_member.username], 'incomes': [], 'expenses': [], 'total': 0}]
         }
 
     def test_list_budgets_anonymous(
         self,
         anonymous_client: APIClient,
-        budget: Budget,
         url_list: str,
     ):
         """Test list budgets by anonymous should fail."""
@@ -298,7 +277,6 @@ class TestBudgetViewSet(TestBudgetBase):
     def test_list_budgets_not_member_user(
         self,
         authenticated_client_not_member: APIClient,
-        budget: Budget,
         url_list: str,
     ):
         """Test list budgets by user is not member and not owner should fail."""
@@ -314,7 +292,6 @@ class TestBudgetViewSet(TestBudgetBase):
     def test_destroy_budget_user_owner(
         self,
         authenticated_client_owner: APIClient,
-        user_owner: User,
         budget: Budget,
         url_detail: str,
     ):
