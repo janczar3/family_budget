@@ -14,7 +14,7 @@ function BudgetListItem({budget, handleDeleteBudget, fetchBudgets}) {
   };
   return (
     <>
-    <a href="#" onClick={() => toggleBudgetDetails(budget.id)}>{budget.name} </a>
+    <a href="#" onClick={() => toggleBudgetDetails(budget.id)}>{budget.name} [{budget.total}] </a>
     <button onClick={() => handleDeleteBudget(budget.id)}>delete</button>
     {budgetsShowDetails.includes(budget.id) && (
       <>

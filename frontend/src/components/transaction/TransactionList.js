@@ -3,17 +3,19 @@ import TransactionForm from "../transaction/TransactionForm";
 
 function TransactionList({budget, fetchBudgets, transactions, type}) {
   return (
-    <div style={{width: 300, border: "1px solid black", margin: 10}}>
+    <div style={{width: 300, border: "1px solid black", margin: 10, padding: 10}}>
       {transactions.length ? (
         <>
-          <div>
-            <p>{type}:</p>
+          <div style={{margin: 10}}>
+            <h4>{type}s:</h4>
             <ul>
               {transactions.map((transaction) => (
                 <li key={transaction.id}>
-                  <p>{transaction.name}</p>
-                  <p>{transaction.category}</p>
-                  <p>{transaction.value}</p>
+                  <span>{transaction.name}</span>
+                  <ul>
+                    <li>category: {transaction.category}</li>
+                    <li>amount: {transaction.value}</li>
+                  </ul>
                 </li>
               ))}
             </ul>

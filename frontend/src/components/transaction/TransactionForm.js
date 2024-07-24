@@ -69,15 +69,15 @@ function TransactionForm({budget, fetchBudgets, type, edit=false}) {
   };
 
   return (
-    <div style={{width: 150, border: "1px solid black"}}>
+    <div style={{width: 280, border: "1px solid black", padding: 10}}>
       {edit ? (
-        <p>Edit {type}</p>
+        <h4>Edit {type}</h4>
       ): (
-        <p>Add New {type}</p>
+        <h4>Add New {type}</h4>
       )}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name</label><br/>
           <input
             type="text"
             id="name"
@@ -86,14 +86,14 @@ function TransactionForm({budget, fetchBudgets, type, edit=false}) {
             required
           />
           <br/>
-          <label htmlFor="category">category</label>
+          <label htmlFor="category">category</label><br/>
           <Select
             value={category}
             onChange={handleSelectCategory}
             options={categories[type]}
             placeholder="Select category"
           />
-          <label htmlFor="name">Amount</label>
+          <label htmlFor="name">Amount</label><br/>
           <input
             type="number"
             id="amount"
