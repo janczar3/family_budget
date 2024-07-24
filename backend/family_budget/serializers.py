@@ -38,6 +38,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(serializers.Serializer):
+    """Serializer for login registered user."""
+
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -51,18 +53,26 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class IncomeSerializer(serializers.ModelSerializer):
+    """Base serializer for Income model."""
+
     class Meta:
         model = Income
         fields = ["id", "name", "budget", "value", "category"]
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
+    """Base serializer for Expense model."""
+
     class Meta:
         model = Expense
         fields = ["id", "name", "budget", "value", "category"]
 
 
 class BudgetSerializer(serializers.ModelSerializer):
+    """Serializer for the Budget model.
+    Used for creating, updating, and retrieving Budget instances.
+    """
+
     incomes = IncomeSerializer(many=True, read_only=True)
     expenses = ExpenseSerializer(many=True, read_only=True)
     users = serializers.ListField(
@@ -95,16 +105,17 @@ class BudgetSerializer(serializers.ModelSerializer):
         ]
 
     def get_total(self, obj):
+        """Calculate the total budget by subtracting the total expenses from the total incomes."""
         incomes_sum = sum(obj.incomes.values_list("value", flat=True))
         expenses_sum = sum(obj.expenses.values_list("value", flat=True))
         return incomes_sum - expenses_sum
 
     def get_user_names(self, obj):
-        """Represents user names."""
+        """Get the usernames of all users associated with the budget."""
         return [user.username for user in obj.users.all()]
 
     def create(self, validated_data):
-        """Convert user names to their ids."""
+        """Create a new Budget instance and set the associated users by their usernames."""
         user_ids = None
         if "users" in validated_data:
             user_names = validated_data.pop("users")
@@ -117,7 +128,7 @@ class BudgetSerializer(serializers.ModelSerializer):
         return budget
 
     def update(self, instance, validated_data):
-        """Convert user names to their ids."""
+        """Update an existing Budget instance and set the associated users by their usernames."""
         if "users" in validated_data:
             user_names = validated_data.pop("users")
             user_ids = User.objects.filter(username__in=user_names).values_list(
@@ -128,17 +139,9 @@ class BudgetSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
-    own_budgets = serializers.SerializerMethodField()
-    shared_budgets = serializers.SerializerMethodField()
+    """Serializer for the User model.
+    Used for retrieving details of a user."""
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "own_budgets", "shared_budgets"]
-
-    def get_own_budgets(self, obj):
-        own_budgets = Budget.objects.filter(owner=obj)
-        return BudgetSerializer(own_budgets, many=True).data
-
-    def get_shared_budgets(self, obj):
-        shared_budgets = Budget.objects.filter(users=obj)
-        return BudgetSerializer(shared_budgets, many=True).data
+        fields = ["id", "username", "email"]
